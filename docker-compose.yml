@@ -1,0 +1,37 @@
+version: '3.4'
+
+services:
+  todoapi:
+    container_name: backend
+    image: ${DOCKER_REGISTRY-}todoapi
+    build:
+      context: .
+      dockerfile: TodoApi/Dockerfile
+    restart: always
+    ports:
+      - "5000:80"
+    depends_on:
+      - database
+    networks:
+      - local
+
+  database:
+    container_name: database
+    image: mariadb
+    restart: always
+    volumes:
+      - data:/var/lib/mysql
+      - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=glopglop
+      - MYSQL_DATABASE=db
+      - MYSQL_USER=pifou
+      - MYSQL_PASSWORD=pasglop
+    networks:
+      - local
+
+networks:
+  local:
+
+volumes:
+  data:
